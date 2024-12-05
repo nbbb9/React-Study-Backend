@@ -1,13 +1,13 @@
 package com.studyreact.sidepj.post;
 
-import com.studyreact.sidepj.user.dto.LoginRequest;
-import com.studyreact.sidepj.user.dto.UserResponse;
+import com.studyreact.sidepj.post.dto.PostRequest;
+import com.studyreact.sidepj.post.dto.PostResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -18,15 +18,15 @@ public class PostController {
 
     public final PostService postService;
 
-    @PostMapping("/posts")
-    public ResponseEntity<?> createPost(
-            @RequestParam String title,
-            @RequestParam String description,
-            @RequestParam(required = false) MultipartFile image,
-            @AuthenticationPrincipal LoginRequest user) {
+    @GetMapping
+    public ResponseEntity<List<PostResponse>> getPosts() {
+        return ResponseEntity.ok(postService.getPosts());
+    }
 
-        postService.createPost(title, description, image, user.getEmail());
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+    @PostMapping("/addposts")
+    public ResponseEntity<?> createPost(@RequestBody PostRequest request) {
+        postService.createPost(request);
+        return ResponseEntity.ok().build();
     }
 
 }

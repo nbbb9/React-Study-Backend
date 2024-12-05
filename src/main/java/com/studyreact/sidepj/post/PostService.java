@@ -1,10 +1,14 @@
 package com.studyreact.sidepj.post;
 
+import com.studyreact.sidepj.post.dto.PostRequest;
+import com.studyreact.sidepj.post.dto.PostResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @Slf4j
 @Service
@@ -14,20 +18,15 @@ public class PostService {
 
     public final PostRepository postRepository;
 
-    public void createPost(String title, String description, MultipartFile image, String username) {
-        String imageUrl = null;
-
-        if (image != null && !image.isEmpty()) {
-            imageUrl = uploadImageToStorage(image); // 이미지 업로드 후 URL 반환
-        }
-
-        Posts post = new Posts(title, description, imageUrl, username);
-        postRepository.save(post);
+    public List<PostResponse> getPosts() {
+        return postRepository.findAll().stream()
+                .map(PostResponse::toResponse)
+                .toList();
     }
 
-    private String uploadImageToStorage(MultipartFile image) {
-        // 이미지 파일 업로드 로직
-        return "https://example.com/images/" + image.getOriginalFilename();
+    public void createPost(PostRequest request){
+        Posts posts = PostRequest.toPosts(request);
+        postRepository.save(posts);
     }
 
 }

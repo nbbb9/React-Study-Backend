@@ -7,6 +7,7 @@ import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Comment;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
@@ -20,15 +21,24 @@ import org.hibernate.annotations.DynamicUpdate;
 public class Posts extends BaseEntity{
 
     @Column
+    @Comment(value = "게시글 제목")
     private String title;
 
     @Column
-    private String description;
+    @Comment(value = "게시글 내용")
+    private String content;
 
     @Column
+    @Comment(value = "이미지 URL")
     private String imageUrl;
 
     @Column
+    @Comment(value = "사용자 이름")
     private String username;
+
+    public Posts(String title, String content){
+        this.title = title;
+        this.content = content;
+    }
 
 }
