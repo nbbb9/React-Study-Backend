@@ -20,11 +20,11 @@ import org.hibernate.annotations.DynamicUpdate;
 @DynamicUpdate
 public class Posts extends BaseEntity{
 
-    @Column
+    @Column(nullable = false)
     @Comment(value = "게시글 제목")
     private String title;
 
-    @Column
+    @Column(nullable = false, columnDefinition = "TEXT")
     @Comment(value = "게시글 내용")
     private String content;
 
@@ -36,9 +36,10 @@ public class Posts extends BaseEntity{
     @Comment(value = "사용자 이름")
     private String username;
 
-    public Posts(String title, String content){
+    public Posts(String title, String content, String imageUrl){
         this.title = title;
         this.content = content;
+        this.imageUrl = imageUrl;
     }
 
 }
