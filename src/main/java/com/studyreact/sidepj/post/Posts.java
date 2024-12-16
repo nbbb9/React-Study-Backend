@@ -42,4 +42,8 @@ public class Posts extends BaseEntity{
         this.imageUrl = imageUrl;
     }
 
+    public Posts(String imageUrl){
+        this.imageUrl = imageUrl;
+    }
+
 }

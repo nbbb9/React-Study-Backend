@@ -4,9 +4,12 @@ import com.studyreact.sidepj.post.dto.PostRequest;
 import com.studyreact.sidepj.post.dto.PostResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -23,7 +26,10 @@ import java.util.List;
 @Transactional(readOnly = true)
 public class PostService {
 
-    public final PostRepository postRepository;
+    @Autowired
+    PostRepository postRepository;
+
+    PostImageHandler postImageHandler = new PostImageHandler();
 
     public List<PostResponse> getPosts() {
         return postRepository.findAll().stream()
@@ -49,4 +55,5 @@ public class PostService {
             throw new RuntimeException("이미지 업로드 실패", e);
         }
     }
+
 }

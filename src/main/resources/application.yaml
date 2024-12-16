@@ -1,7 +1,7 @@
 spring:
   web:
     resources:
-      statoc-locations: file:/
+      static-locations: file:/media/
   application:
     name: app
   datasource:

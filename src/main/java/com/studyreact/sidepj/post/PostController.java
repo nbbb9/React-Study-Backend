@@ -3,6 +3,7 @@ package com.studyreact.sidepj.post;
 import com.studyreact.sidepj.post.dto.PostRequest;
 import com.studyreact.sidepj.post.dto.PostResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -41,6 +42,7 @@ public class PostController {
         postService.createPost(request);
         return ResponseEntity.ok().build();
     }
+
 
 
 }
