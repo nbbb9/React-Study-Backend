@@ -7,6 +7,7 @@ import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Comment;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
@@ -19,17 +20,21 @@ import org.hibernate.annotations.DynamicUpdate;
 @DynamicUpdate
 public class User extends BaseEntity {
 
-    @Column
+    @Column(nullable = false)
+    @Comment("이름")
     String name;
 
-    @Column
+    @Column(nullable = false)
+    @Comment("이메일")
     String email;
 
-    @Column
+    @Column(nullable = false)
+    @Comment("비밀번호")
     String password;
 
     public User(String email, String password) {
         this.email = email;
         this.password = password;
     }
+
 }

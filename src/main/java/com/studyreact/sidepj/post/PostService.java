@@ -2,21 +2,12 @@ package com.studyreact.sidepj.post;
 
 import com.studyreact.sidepj.post.dto.PostRequest;
 import com.studyreact.sidepj.post.dto.PostResponse;
+import com.studyreact.sidepj.post.file.PostImageHandler;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.awt.*;
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
-import java.util.UUID;
 
 import java.util.List;
 
@@ -26,33 +17,38 @@ import java.util.List;
 @Transactional(readOnly = true)
 public class PostService {
 
-    @Autowired
-    PostRepository postRepository;
+    private final PostRepository postRepository;
 
     PostImageHandler postImageHandler = new PostImageHandler();
 
+    /**
+     * 게시글 가져오기
+     *
+     * @return List<PostResponse>
+     * */
     public List<PostResponse> getPosts() {
         return postRepository.findAll().stream()
                 .map(PostResponse::toResponse)
                 .toList();
     }
 
-    public void createPost(PostRequest request){
+    /**
+     * 게시글 작성
+     *
+     * @param
+     * @return List<PostResponse>
+     * */
+    @Transactional
+    public void createPost(PostRequest request, List<MultipartFile> image) {
         Posts posts = PostRequest.toPosts(request);
-        postRepository.save(posts);
-    }
+        Posts savePost = postRepository.save(posts);
 
-    public String uploadImage(MultipartFile image) {
-        try {
-            String fileName = UUID.randomUUID() + "_" + image.getOriginalFilename();
-            Path imagePath = Paths.get("/tmp/uploads/" + fileName);// 로컬 디렉토리에 저장
-            if (!Files.exists(imagePath)) {
-                Files.createDirectories(imagePath); // 디렉토리가 없으면 생성
+        if(image != null && !image.isEmpty()) {
+            for(MultipartFile multipartFile : image){
+                if(multipartFile != null) {
+                    /// /////////////////////
+                }
             }
-            Files.copy(image.getInputStream(), imagePath, StandardCopyOption.REPLACE_EXISTING);
-            return "/uploads/" + fileName; // 저장된 파일 경로 반환
-        } catch (IOException e) {
-            throw new RuntimeException("이미지 업로드 실패", e);
         }
     }
 

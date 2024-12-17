@@ -25,7 +25,6 @@ public class UserController {
 
     @PostMapping("/login")//로그인
     public ResponseEntity<?> login(@RequestBody LoginRequest request, HttpServletResponse response){
-        log.info("로그인 입력값 : email={}, password={}", request.email(), request.password());
         userService.login(request);
         return ResponseEntity.ok().build();
     }

@@ -36,14 +36,9 @@ public class Posts extends BaseEntity{
     @Comment(value = "사용자 이름")
     private String username;
 
-    public Posts(String title, String content, String imageUrl){
+    public Posts(String title, String content){
         this.title = title;
         this.content = content;
-        this.imageUrl = imageUrl;
-    }
-
-    public Posts(String imageUrl){
-        this.imageUrl = imageUrl;
     }
 
 }

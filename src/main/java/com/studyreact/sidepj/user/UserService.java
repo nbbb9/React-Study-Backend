@@ -17,16 +17,24 @@ public class UserService {
 
     public final UserRepository userRepository;
 
+    /**
+     * 회원가입
+     *
+     * @param request UserRequest
+     * @return void
+     * */
     public void signup(UserRequest request){
         User user = UserRequest.toUser(request);
         userRepository.save(user);
     }
 
+    /**
+     * 로그인
+     * @param request LoginRequest
+     * @return void
+     * */
     public void login(LoginRequest request){
-        log.info("컨트롤러 - 로그인 입력값 : email={}, password={}", request.email(), request.password());
         User user = LoginRequest.toUser(request);
-        log.info("서비스 - 변환된 User 객체 : email={}, password={}", user.getEmail(), user.getPassword());
-
         userRepository.findByEmailAndPassword(user.email, user.password)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid email or password"));
     }
