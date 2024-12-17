@@ -36,7 +36,7 @@ public class PostService {
      * 게시글 작성
      *
      * @param
-     * @return List<PostResponse>
+     * @return void
      * */
     @Transactional
     public void createPost(PostRequest request, List<MultipartFile> image) {

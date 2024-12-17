@@ -20,12 +20,12 @@ public class PostController {
 
     public final PostService postService;
 
-    @GetMapping
+    @GetMapping//전체 게시글 조회
     public ResponseEntity<List<PostResponse>> getPosts() {
         return ResponseEntity.ok(postService.getPosts());
     }
 
-    @PostMapping("/addpost")
+    @PostMapping("/addpost")//게시글 저장
     public ResponseEntity<?> createPost(@RequestPart PostRequest request,
                                         //@RequestHeader("Authorization") String token >> 나중에 기능 구현
                                         @RequestPart(value = "image", required = false) List<MultipartFile> image) {
