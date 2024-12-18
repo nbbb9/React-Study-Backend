@@ -23,6 +23,7 @@ public class UserService {
      * @param request UserRequest
      * @return void
      * */
+    @Transactional
     public void signup(UserRequest request){
         User user = UserRequest.toUser(request);
         userRepository.save(user);
