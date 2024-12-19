@@ -40,7 +40,6 @@ public class UserService {
 //        userRepository.findByEmailAndPassword(user.email, user.password)
 //                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid email or password"));
 //    }
-
     public String login(LoginRequest request) {
         User user = userRepository.findByEmailAndPassword(request.email(), request.password())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid email or password"));
