@@ -5,7 +5,9 @@ import com.studyreact.sidepj.user.dto.UserRequest;
 import configs.security.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
@@ -17,6 +19,8 @@ import org.springframework.web.server.ResponseStatusException;
 public class UserService {
 
     public final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final JwtUtil jwtUtil;
 
     /**
      * 회원가입
@@ -24,11 +28,18 @@ public class UserService {
      * @param request UserRequest
      * @return void
      * */
+//    @Transactional
+//    public void signup(UserRequest request){
+//        User user = UserRequest.toUser(request);
+//        userRepository.save(user);
+//    }
     @Transactional
-    public void signup(UserRequest request){
-        User user = UserRequest.toUser(request);
+    public void signup(UserRequest request) {
+        String encryptedPassword = passwordEncoder.encode(request.password());
+        User user = new User(request.name(), request.email(), encryptedPassword);
         userRepository.save(user);
     }
+
 
     /**
      * 로그인
@@ -41,10 +52,14 @@ public class UserService {
 //                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid email or password"));
 //    }
     public String login(LoginRequest request) {
-        User user = userRepository.findByEmailAndPassword(request.email(), request.password())
+        User user = userRepository.findByEmail(request.email())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid email or password"));
 
-        return JwtUtil.generateToken(user.getEmail());
+        if (!passwordEncoder.matches(request.password(), user.getPassword())) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid email or password");
+        }
+
+        return jwtUtil.generateToken(user.getEmail());
     }
 
 }

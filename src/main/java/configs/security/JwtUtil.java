@@ -5,39 +5,53 @@ package configs.security;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.io.Decoders;
+import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
-
+import org.springframework.stereotype.Component;
 import javax.crypto.SecretKey;
+import java.util.Base64;
 import java.util.Date;
 
+@Component
 public class JwtUtil {
 
-    @Value("${jwt.secret-key}")
-    private static String SECRET_KEY;
+    private String SECRET_KEY;
 
-    private static final long EXPIRE_ACCESS_TOKEN = 1000 * 60 * 60; // 만료시간 1시간
+    @Value("${jwt.secret-key}")
+    public void setSecretKey(String secretKey) {
+        this.SECRET_KEY = Base64.getEncoder().encodeToString(secretKey.getBytes());
+    }
+
+    private static final long EXPIRE_ACCESS_TOKEN = 1000 * 60 * 60; // 토큰 만료시간 1시간
 
     private static final String TOKEN_INVALID_MESSAGE = "Token is invalid";
     private static final String TOKEN_EXPIRED_MESSAGE = "Token is expired";
 
-    public static String generateToken(String email) {
+    public String generateToken(String email) {
         return Jwts.builder()
                 .setSubject(email)
-                .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + EXPIRE_ACCESS_TOKEN))
                 .signWith(SignatureAlgorithm.HS256, SECRET_KEY)
                 .compact();
     }
 
-    public static Claims validateToken(String token) {//검증 토큰
+    public boolean validateToken(String token) {
+        try {
+            Jwts.parser()
+                    .setSigningKey(SECRET_KEY)
+                    .parseClaimsJws(token);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public String getEmailFromToken(String token) {
         return Jwts.parser()
                 .setSigningKey(SECRET_KEY)
                 .parseClaimsJws(token)
-                .getBody();
-    }
-
-    private SecretKey getSigningKey() {
-        byte[] keyBytes = Decoders.BASE64.decode(secret);
-        return Keys.hmacShaKeyFor(keyBytes);
+                .getBody()
+                .getSubject();
     }
 }

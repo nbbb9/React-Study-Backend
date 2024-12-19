@@ -32,7 +32,8 @@ public class UserController {
     @PostMapping("/login") // 로그인
     public ResponseEntity<?> login(@RequestBody LoginRequest request) {
         String token = userService.login(request);
-        return ResponseEntity.ok(token);
+        log.info("Token : " + token);
+        return ResponseEntity.ok(token);//토큰을 리턴함
     }
 
 }

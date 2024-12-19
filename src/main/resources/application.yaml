@@ -5,9 +5,11 @@ spring:
   application:
     name: app
   datasource:
-    url: jdbc:mariadb://127.0.0.1:3306/reactstudy
+#    url: jdbc:mariadb://127.0.0.1:3306/reactstudy
+    url: jdbc:mariadb://127.0.0.1:8282/reactstudy
     username: root
-    password: 12345678
+#    password: 12345678
+    password: 1234
     driver-class-name: org.mariadb.jdbc.Driver
   jpa:
     show-sql: true
