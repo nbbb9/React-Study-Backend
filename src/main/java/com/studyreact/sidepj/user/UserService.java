@@ -2,6 +2,7 @@ package com.studyreact.sidepj.user;
 
 import com.studyreact.sidepj.user.dto.LoginRequest;
 import com.studyreact.sidepj.user.dto.UserRequest;
+import configs.security.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -34,10 +35,17 @@ public class UserService {
      * @param request LoginRequest
      * @return void
      * */
-    public void login(LoginRequest request){
-        User user = LoginRequest.toUser(request);
-        userRepository.findByEmailAndPassword(user.email, user.password)
+//    public void login(LoginRequest request){
+//        User user = LoginRequest.toUser(request);
+//        userRepository.findByEmailAndPassword(user.email, user.password)
+//                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid email or password"));
+//    }
+
+    public String login(LoginRequest request) {
+        User user = userRepository.findByEmailAndPassword(request.email(), request.password())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid email or password"));
+
+        return JwtUtil.generateToken(user.getEmail());
     }
 
 }
