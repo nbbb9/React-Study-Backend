@@ -1,15 +1,20 @@
 package com.studyreact.sidepj.post.dto;
 
 import com.studyreact.sidepj.post.Posts;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 public record PostRequest(
         String title,
-        String content
+        String content,
+        MultipartFile image
 ) {
-    public static Posts toPosts(PostRequest request){
-        return new Posts(
-                request.title(),
-                request.content()
-        );
+    public Posts toEntity(String image)throws IOException {
+        return Posts.builder()
+                .title(title)
+                .content(content)
+                .imageUrl(image)
+                .build();
     }
 }

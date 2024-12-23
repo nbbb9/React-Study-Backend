@@ -5,6 +5,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Comment;
@@ -36,11 +37,10 @@ public class Posts extends BaseEntity{
     @Comment(value = "사용자 이름")
     private String username;
 
-    public Posts(String title, String content){
+    @Builder
+    public Posts(String title, String content, String imageUrl){
         this.title = title;
         this.content = content;
-    }
-    public Posts(String imageUrl){
         this.imageUrl = imageUrl;
     }
 

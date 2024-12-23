@@ -1,34 +1,77 @@
 package com.studyreact.sidepj.post.file;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 //실제로 서버안에 이미지를 저장하는 부분을 담당
+@Slf4j
+@Component
 public class PostImageHandler {
 
-    @Value("/media/post-images/")
-    private String ROOT_PATH;
+//    @Value("${image.storage.path}")
+//    private String ROOT_PATH;
+
+//    public String save(MultipartFile image) throws IOException {
+//        String fileName = getOriginName(image);
+//        String fullPathName = ROOT_PATH + fileName;
+//
+//        // 디렉터리가 없으면 생성
+//        File directory = new File(ROOT_PATH);
+//        if (!directory.exists()) {
+//            directory.mkdirs();
+//        }
+//
+//        // 파일 저장
+//        image.transferTo(new File(fullPathName));
+//        return fullPathName;
+//    }
+
+    private final String uploadDir = "/home/lyw/Database/reactstudy/media/";
 
     public String save(MultipartFile image) throws IOException {
-        String fileName = getOriginName(image);
-        String fullPathName = ROOT_PATH + fileName;
-
-        // 디렉터리가 없으면 생성
-        File directory = new File(ROOT_PATH);
-        if (!directory.exists()) {
-            directory.mkdirs();
+        if (image == null || image.isEmpty()) {
+            log.info("이미지가 비어 있습니다.");
+            return null;
         }
 
-        // 파일 저장
-        image.transferTo(new File(fullPathName));
-        return fullPathName;
+        log.info("이미지 저장 경로: {}", uploadDir);
+        log.info("이미지 이름: {}", image.getOriginalFilename());
+
+        try {
+            // 업로드 디렉토리가 존재하지 않으면 생성
+            Path uploadPath = Paths.get(uploadDir);
+            if (!Files.exists(uploadPath)) {
+                log.info("업로드 디렉토리가 존재하지 않아 생성합니다: {}", uploadDir);
+                Files.createDirectories(uploadPath);
+            }
+
+            // 파일 저장
+            String fileName = System.currentTimeMillis() + "_" + image.getOriginalFilename();
+            Path filePath = uploadPath.resolve(fileName);
+            Files.write(filePath, image.getBytes());
+            log.info("파일 저장 완료: {}", filePath);
+
+            return filePath.toString();
+        } catch (IOException e) {
+            log.error("파일 저장 실패: {}", e.getMessage(), e);
+            throw e;
+        }
     }
 
+
+    //원래 파일 이름 가져오기
     private String getOriginName(MultipartFile image) {
-        return image.getOriginalFilename(); // 전달받은 이미지 파일의 이름을 반환
+        String originalName = image.getOriginalFilename();
+        return (originalName != null && !originalName.isBlank()) ? originalName : "default_image.jpg";
     }
+
 
 }
 

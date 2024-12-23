@@ -1,5 +1,7 @@
 package com.studyreact.sidepj.post;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.studyreact.sidepj.post.dto.PostRequest;
 import com.studyreact.sidepj.post.dto.PostResponse;
 import lombok.RequiredArgsConstructor;
@@ -9,6 +11,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 import java.util.List;
 
 @Slf4j
@@ -25,11 +29,20 @@ public class PostController {
         return ResponseEntity.ok(postService.getPosts());
     }
 
-    @PostMapping("/addpost")//게시글 저장
-    public ResponseEntity<?> createPost(@RequestPart PostRequest request,
-                                        //@RequestHeader("Authorization") String token >> 나중에 기능 구현
-                                        @RequestPart(value = "image", required = false) List<MultipartFile> image) {
-        postService.createPost(request, image);
+//    @PostMapping("/addpost")//게시글 저장
+//    public ResponseEntity<?> createPost(@RequestPart("file") PostRequest request,
+//                                        //@RequestHeader("Authorization") String token >> 나중에 기능 구현
+//                                        @RequestPart(value = "image", required = false) MultipartFile image){
+//        log.info("request : " + request);
+//        log.info("image : " + image);
+//        postService.createPost(request, image);
+//        return ResponseEntity.ok().build();
+//    }
+
+    @PostMapping("/addpost")
+    public ResponseEntity<?> createPost (@ModelAttribute PostRequest request)throws IOException {
+        log.info("제발!!!!! : " + request);
+        Posts createdPost = postService.createPost(request);
         return ResponseEntity.ok().build();
     }
 
