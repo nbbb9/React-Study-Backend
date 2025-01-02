@@ -18,15 +18,15 @@ public class UserController {
     public final UserService userService;
 
     @PostMapping("/signup")//회원가입
-    public ResponseEntity<?> signUp(@RequestBody UserRequest request , HttpServletResponse response){
+    public ResponseEntity<Void> signUp(@RequestBody UserRequest request){
         userService.signup(request);
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/login") // 로그인
-    public ResponseEntity<?> login(@RequestBody LoginRequest request) {
+    @PostMapping("/login")//로그인
+    public ResponseEntity<String> login(@RequestBody LoginRequest request) {
         String token = userService.login(request);
-        return ResponseEntity.ok(token);//토큰을 리턴함
+        return ResponseEntity.ok(token);//토큰 리턴
     }
 
 }

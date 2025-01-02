@@ -37,31 +37,6 @@ public class PostService {
      * @param
      * @return void
      * */
-//    @Transactional
-//    public void createPost(PostRequest request, MultipartFile image) {
-//        String imageUrl = null;
-//
-//        if(image != null && !image.isEmpty()){
-//          try{
-//              String uploadDir = "/home/lyw/Database/reactstudy/media/";
-//              Path uploadPath = Paths.get(uploadDir);
-//              if (!Files.exists(uploadPath)) {
-//                  Files.createDirectories(uploadPath);
-//              }
-//              String fileName = System.currentTimeMillis() + "_" + image.getOriginalFilename();
-//              Path filePath = uploadPath.resolve(fileName);
-//              Files.write(filePath, image.getBytes());
-//              imageUrl = filePath.toString();
-//          }catch(IOException e){
-//              throw new RuntimeException("이미지 저장 실패", e);
-//          }
-//        }
-//        Posts post = Posts.builder()
-//                            .title(request.title())
-//                            .content(request.content()).imageUrl(imageUrl).build();
-//
-//        postRepository.save(post);
-//    }
     @Transactional
     public Posts createPost(PostRequest request)throws IOException {
         //이미지 경로 저장

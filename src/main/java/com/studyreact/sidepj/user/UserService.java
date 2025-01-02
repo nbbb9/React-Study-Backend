@@ -29,11 +29,10 @@ public class UserService {
      * */
     @Transactional
     public void signup(UserRequest request) {
-        String encryptedPassword = passwordEncoder.encode(request.password());
+        String encryptedPassword = passwordEncoder.encode(request.password());//비밀번호 암호화
         User user = new User(request.name(), request.email(), encryptedPassword);
         userRepository.save(user);
     }
-
 
     /**
      * 로그인
@@ -41,10 +40,10 @@ public class UserService {
      * @return void
      * */
     public String login(LoginRequest request) {
-        User user = userRepository.findByEmail(request.email())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid email or password"));
+        User user = userRepository.findByEmail(request.email())//이메일 기반으로 사용자 찾기
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "틀린 이메일 또는 비밀번호 입니다."));
         if (!passwordEncoder.matches(request.password(), user.getPassword())) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid email or password");
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "틀린 이메일 또는 비밀번호 입니다.");
         }
         return jwtUtil.generateToken(user.getEmail());
     }
