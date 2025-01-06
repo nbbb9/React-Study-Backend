@@ -38,10 +38,10 @@ public class PostService {
      * @return void
      * */
     @Transactional
-    public Posts createPost(PostRequest request)throws IOException {
+    public Posts createPost(PostRequest request) {
         //이미지 경로 저장
-        String imagePath = postImageHandler.save(request.image());
-        Posts entity = request.toEntity(imagePath);
+//        String imagePath = postImageHandler.save(request.image());
+        Posts entity = request.toEntity();
         return postRepository.save(entity);
     }
 

@@ -25,7 +25,7 @@ public class PostController {
     }
 
     @PostMapping("/addpost")//게시글 저장
-    public ResponseEntity<?> createPost (@ModelAttribute PostRequest request)throws IOException {
+    public ResponseEntity<Void> createPost (@RequestBody PostRequest request)throws IOException {
         Posts createdPost = postService.createPost(request);
         return ResponseEntity.ok().build();
     }

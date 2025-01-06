@@ -8,13 +8,19 @@ import java.io.IOException;
 public record PostRequest(
         String title,
         String content,
-        MultipartFile image
+        String imageUrl
 ) {
-    public Posts toEntity(String image)throws IOException {
+//    public Posts toEntity(String image)throws IOException {
+//        return Posts.builder()
+//                .title(title)
+//                .content(content)
+//                .imageUrl(image)
+//                .build();
+//    }
+    public Posts toEntity(){
         return Posts.builder()
                 .title(title)
                 .content(content)
-                .imageUrl(image)
                 .build();
     }
 }
