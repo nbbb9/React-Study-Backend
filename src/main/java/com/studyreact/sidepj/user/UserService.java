@@ -1,6 +1,7 @@
 package com.studyreact.sidepj.user;
 
 import com.studyreact.sidepj.user.dto.LoginRequest;
+import com.studyreact.sidepj.user.dto.IsExistUserRequest;
 import com.studyreact.sidepj.user.dto.UserRequest;
 import configs.security.JwtUtil;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +24,6 @@ public class UserService {
 
     /**
      * 회원가입
-     *
      * @param request UserRequest
      * @return void
      * */
@@ -46,6 +46,25 @@ public class UserService {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "틀린 이메일 또는 비밀번호 입니다.");
         }
         return jwtUtil.generateToken(user.getEmail());
+    }
+
+    /**
+     * 이름으로 이메일 찾기
+     * @param name
+     * @return String
+     */
+    public String findMyEmail(String name){
+        return userRepository.findEmailByName(name);
+    }
+
+    /**
+     * 이름과 이메일로 사용자 존재 여부 판단
+     * @param request IsExistUserRequest
+     * @return "exist" or "notExist"
+     */
+    public String isExistUser(IsExistUserRequest request) {
+        boolean userExists = userRepository.existsByNameAndEmail(request.name(), request.email());
+        return userExists ? "exist" : "notExist";
     }
 
 }

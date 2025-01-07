@@ -32,9 +32,4 @@ public class User extends BaseEntity {
     @Comment("비밀번호")
     String password;
 
-    public User(String email, String password) {
-        this.email = email;
-        this.password = password;
-    }
-
 }
