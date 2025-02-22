@@ -1,6 +1,7 @@
 package com.studyreact.sidepj.user;
 
 import com.studyreact.sidepj.base.entities.BaseEntity;
+import com.studyreact.sidepj.user.dto.UserRequest;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
@@ -21,15 +22,37 @@ import org.hibernate.annotations.DynamicUpdate;
 public class User extends BaseEntity {
 
     @Column(nullable = false)
-    @Comment("이름")
+    @Comment(value = "이름")
     String name;
 
     @Column(nullable = false)
-    @Comment("이메일")
+    @Comment(value = "이메일")
     String email;
 
     @Column(nullable = false)
-    @Comment("비밀번호")
+    @Comment(value = "비밀번호")
     String password;
+
+    @Column(name = "is_delete", nullable = false, columnDefinition = "boolean default false")
+    private boolean isDelete;
+
+    public void save(UserRequest request, String encryptedPassword){
+        duplicationField(request);
+        this.password = encryptedPassword;
+    }
+
+    public void update(UserRequest request, String encryptedPassword){
+        duplicationField(request);
+        this.password = encryptedPassword;
+    }
+
+    public void delete(){
+        this.isDelete = true;
+    }
+
+    private void duplicationField(UserRequest request){
+        this.name = request.name();
+        this.email = request.email();
+    }
 
 }

@@ -25,8 +25,7 @@ public class UserController {
 
     @PostMapping("/login")//로그인
     public ResponseEntity<String> login(@RequestBody LoginRequest request) {
-        String token = userService.login(request);
-        return ResponseEntity.ok(token);//토큰 리턴
+        return ResponseEntity.ok(userService.login(request));//토큰 리턴
     }
 
     @GetMapping("/findMyEmail")//이름으로 이메일 찾기

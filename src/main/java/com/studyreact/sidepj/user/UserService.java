@@ -15,7 +15,6 @@ import org.springframework.web.server.ResponseStatusException;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
 public class UserService {
 
     public final UserRepository userRepository;
@@ -30,7 +29,8 @@ public class UserService {
     @Transactional
     public void signup(UserRequest request) {
         String encryptedPassword = passwordEncoder.encode(request.password());//비밀번호 암호화
-        User user = new User(request.name(), request.email(), encryptedPassword);
+        User user = new User();
+        user.save(request, encryptedPassword);
         userRepository.save(user);
     }
 
@@ -41,9 +41,9 @@ public class UserService {
      * */
     public String login(LoginRequest request) {
         User user = userRepository.findByEmail(request.email())//이메일 기반으로 사용자 찾기
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "틀린 이메일 또는 비밀번호 입니다."));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Not exist User"));
         if (!passwordEncoder.matches(request.password(), user.getPassword())) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "틀린 이메일 또는 비밀번호 입니다.");
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Not matched password");
         }
         return jwtUtil.generateToken(user.getEmail());
     }
@@ -65,6 +65,18 @@ public class UserService {
     public String isExistUser(IsExistUserRequest request) {
         boolean userExists = userRepository.existsByNameAndEmail(request.name(), request.email());
         return userExists ? "exist" : "notExist";
+    }
+
+    /**
+     * 사용자 삭제처리
+     * @param
+     * @return void
+     */
+    @Transactional
+    public void deleteUser(String userId){
+        User user  = userRepository.findByUserId(userId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Not exist user"));
+        user.delete();
     }
 
 }

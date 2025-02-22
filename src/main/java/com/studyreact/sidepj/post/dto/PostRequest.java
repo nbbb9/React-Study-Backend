@@ -1,26 +1,24 @@
 package com.studyreact.sidepj.post.dto;
 
 import com.studyreact.sidepj.post.Posts;
+import com.studyreact.sidepj.user.User;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 
 public record PostRequest(
+        String id,
         String title,
         String content,
-        String imageUrl
+        String userId
 ) {
-//    public Posts toEntity(String image)throws IOException {
-//        return Posts.builder()
-//                .title(title)
-//                .content(content)
-//                .imageUrl(image)
-//                .build();
-//    }
-    public Posts toEntity(){
-        return Posts.builder()
-                .title(title)
-                .content(content)
-                .build();
+
+    public PostRequest from(Posts post, User user){
+        return new PostRequest(
+                post.getId().toString(),
+                post.getTitle(),
+                post.getContent(),
+                user.getId().toString()
+        );
     }
 }
